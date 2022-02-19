@@ -75,29 +75,6 @@ const App = () => {
       notificationsStore = [...notifications]
       notifyNewN()
     })
-    socket.on("commit", (writeToken, authToken) => {
-      if (writeToken !== undefined) {
-        if (writeToken < ackWriteToken) {
-          return
-        }
-        ackWriteToken = writeToken
-        if (pendingWrites[writeToken] !== undefined) {
-          pendingWrites[writeToken]([true, authToken])
-        }
-      }
-    })
-    socket.on("fail", (msg, writeToken) => {
-      alert(msg)
-      if (writeToken !== undefined) {
-        if (writeToken < ackWriteToken) {
-          return
-        }
-        ackWriteToken = writeToken
-        if (pendingWrites[writeToken] !== undefined) {
-          pendingWrites[writeToken]([false, null])
-        }
-      }
-    })
     socket.on("sendAdminSalt", (salt) => {
       adminSalt = salt
       if (waitSalt) {
@@ -191,18 +168,8 @@ const readDataStore = (internalUID) => {
   }
 }
 
-var ackWriteToken = 0
-var currWriteToken = 0
-var pendingWrites = []
-
 const appendSubmission = async (write, authToken) => {
-  currWriteToken++
-  var resolve
-  const myPromise = new Promise(v => resolve=v)
-  pendingWrites[currWriteToken] = resolve
   socket.emit("writeNotifications", adminAuthToken, write)
-  const ret = await myPromise
-  return ret
 }
 
 const readRange = () => {
