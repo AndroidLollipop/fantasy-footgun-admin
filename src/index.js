@@ -118,7 +118,7 @@ const SettingsPanel = () => {
     <div>
       <div style={{height: "12px"}}/>
       <div style={formItemStyle}>
-        <Material.TextField select label={"Show scores on leaderboard"} variant="outlined" value={valueMap[state.scoreRows]} SelectProps={{native: true}}
+        <Material.TextField fullWidth={true} select label={"Show scores on leaderboard"} variant="outlined" value={valueMap[state.scoreRows]} SelectProps={{native: true}}
           onChange={(event) => setState({...state, scoreRows: optionMap[event.target.value]})}
           InputLabelProps={{
             shrink: true,
@@ -131,7 +131,7 @@ const SettingsPanel = () => {
         </Material.TextField>
       </div>
       <div style={formItemStyle}>
-        <Material.TextField select label={"Allow submissions"} variant="outlined" value={valueMap[state.allowSubmissions]} SelectProps={{native: true}}
+        <Material.TextField fullWidth={true} select label={"Allow submissions"} variant="outlined" value={valueMap[state.allowSubmissions]} SelectProps={{native: true}}
           onChange={(event) => setState({...state, allowSubmissions: optionMap[event.target.value]})}
           InputLabelProps={{
             shrink: true,
