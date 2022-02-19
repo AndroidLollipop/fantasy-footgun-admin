@@ -9,7 +9,7 @@ import * as Icons from "@material-ui/icons"
 import sir5logo from "./resources/5sirlogo.jpg"
 
 var shajs = require("sha.js")
-const VERSION_NUMBER = "fantasy-footgun-admin 0.1.7a"
+const VERSION_NUMBER = "fantasy-footgun-admin 0.1.9a"
 console.log(VERSION_NUMBER)
 var serverURL = "https://sheltered-atoll-88652.herokuapp.com/"
 const sha256hash = content => shajs('sha256').update(content).digest('base64')
@@ -99,19 +99,54 @@ const App = () => {
           <TeamView id={0}/>
         </div>),
         (<div label="settings" key="defaultTab2" myKey="defaultTab2">
-          <NotificationsPanel/>
+          <SettingsPanel/>
         </div>), ...tabs.map(({type, params: v}, i) => (<div></div>))]}
       </Tabs>
     </div>
   );
 }
 
-const NotificationsPanel = () => {
+const optionMap = [undefined, true, false]
+const valueMap = {}
+for (var i = 0; i < optionMap.length; i++) {
+  valueMap[optionMap[i]] = i
+}
+
+const SettingsPanel = () => {
+  const [state, setState] = React.useState({scoreRows: undefined, allowSubmissions: undefined})
   return (
     <div>
       <div style={{height: "12px"}}/>
-      <Material.Paper square>
-      </Material.Paper>
+      <div style={formItemStyle}>
+        <Material.TextField select label={"Show scores on leaderboard"} variant="outlined" value={valueMap[state.scoreRows]} SelectProps={{native: true}}
+          onChange={(event) => setState({...state, scoreRows: optionMap[event.target.value]})}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          style={{maxWidth: "1000px"}}
+          >
+          <option value={0}></option>
+          <option value={1}>Yes</option>
+          <option value={2}>No</option>
+        </Material.TextField>
+      </div>
+      <div style={formItemStyle}>
+        <Material.TextField select label={"Allow submissions"} variant="outlined" value={valueMap[state.allowSubmissions]} SelectProps={{native: true}}
+          onChange={(event) => setState({...state, allowSubmissions: optionMap[event.target.value]})}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          style={{maxWidth: "1000px"}}
+          >
+          <option value={0}></option>
+          <option value={1}>Yes</option>
+          <option value={2}>No</option>
+        </Material.TextField>
+      </div>
+      <Material.Button variant="outlined" onClick={() => {
+        console.log(state)
+        socket.emit("writeState", adminAuthToken, state)
+      }}>apply</Material.Button>
     </div>
   )
 }
