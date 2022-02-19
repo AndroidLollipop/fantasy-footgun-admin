@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/fantasy-footgun-admin/static/js/main.c847cc90.chunk.js",
-    "main.js.map": "/fantasy-footgun-admin/static/js/main.c847cc90.chunk.js.map",
+    "main.js": "/fantasy-footgun-admin/static/js/main.720ef394.chunk.js",
+    "main.js.map": "/fantasy-footgun-admin/static/js/main.720ef394.chunk.js.map",
     "runtime-main.js": "/fantasy-footgun-admin/static/js/runtime-main.9d0a8835.js",
     "runtime-main.js.map": "/fantasy-footgun-admin/static/js/runtime-main.9d0a8835.js.map",
     "static/js/2.20fd137b.chunk.js": "/fantasy-footgun-admin/static/js/2.20fd137b.chunk.js",
@@ -13,6 +13,6 @@
   "entrypoints": [
     "static/js/runtime-main.9d0a8835.js",
     "static/js/2.20fd137b.chunk.js",
-    "static/js/main.c847cc90.chunk.js"
+    "static/js/main.720ef394.chunk.js"
   ]
 }
