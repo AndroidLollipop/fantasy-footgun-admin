@@ -182,8 +182,7 @@ const FormFactory = ({blobs, prefill, fields, formPersistentStore, validator}) =
       const normalizer = normalizers[fieldType]
       constitutedObject.push({name: fieldName, category: friendlyName, winner: text})
     }
-    console.log(constitutedObject)
-    const [success, authToken] = await appendSubmission(constitutedObject)
+    appendSubmission(constitutedObject)
   }
   return (
   <div>
