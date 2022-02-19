@@ -195,20 +195,13 @@ var ackWriteToken = 0
 var currWriteToken = 0
 var pendingWrites = []
 
-var reqInProgress = false
-
 const appendSubmission = async (write, authToken) => {
-  if (reqInProgress) {
-    return [false, null]
-  }
-  reqInProgress = true
   currWriteToken++
   var resolve
   const myPromise = new Promise(v => resolve=v)
   pendingWrites[currWriteToken] = resolve
   socket.emit("writeNotifications", adminAuthToken, write)
   const ret = await myPromise
-  reqInProgress = false
   return ret
 }
 
