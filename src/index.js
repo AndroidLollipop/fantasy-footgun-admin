@@ -213,7 +213,7 @@ const FormFactory = ({blobs, prefill, fields, formPersistentStore, validator}) =
   const submit = async (authenticated) => {
     var constitutedObject = []
     for (const [text, setText, initialData, fieldName, friendlyName, fieldType] of fieldStates) {
-      if (text !== -1) {
+      if (text !== "null") {
         constitutedObject.push({name: fieldName, category: friendlyName, winner: text})
       }
     }
@@ -274,7 +274,7 @@ const FormFactory = ({blobs, prefill, fields, formPersistentStore, validator}) =
         }}
         style={{maxWidth: "1000px"}}
         >
-        {(options => [<option key={-2} value={-1}></option>, <option key={-1} value={"TBD"}>TBD</option>, ...options])(blobs[blobName].map((val, index) => (<option key={index} value={val.name}>{val.friendlyName}</option>)))}
+        {(options => [<option key={-2} value={"null"}></option>, <option key={-1} value={"TBD"}>TBD</option>, ...options])(blobs[blobName].map((val, index) => (<option key={index} value={val.name}>{val.friendlyName}</option>)))}
         </Material.TextField>
         <div style={{flexBasis: "100%", height: "12px"}}/>{text === null ? <div style={{height: 125, width: 1}}/> : <img src={blobs[blobName].find(x => x.name === text)?.photo} height={125}/>}
       </React.Fragment>)
@@ -346,7 +346,7 @@ const TransportViewStyle = {
 
 var dataStore = {columns: [], rows: []}
 
-var formStore = {fields: [{name: "sar21", initialData: -1, friendlyName: "Best SAR21" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}, {name: "saw", initialData: -1, friendlyName: "Best SAW" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}, {name: "gpmg", initialData: -1, friendlyName: "Best GPMG" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}], data: {}, blobs: {"Soldiers": [
+var formStore = {fields: [{name: "sar21", initialData: "null", friendlyName: "Best SAR21" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}, {name: "saw", initialData: "null", friendlyName: "Best SAW" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}, {name: "gpmg", initialData: "null", friendlyName: "Best GPMG" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}], data: {}, blobs: {"Soldiers": [
   {name: "Alpha", fullName: "PTE 1", friendlyName: "Alpha - PTE 1", photo: "https://i.pinimg.com/originals/3e/37/24/3e3724692c15d28f12a4c7bc6fe0b945.jpg"},
   {name: "Bravo", fullName: "PTE 2", friendlyName: "Bravo - PTE 2", photo: "https://scontent.fsin13-1.fna.fbcdn.net/v/t1.6435-9/64861023_2345584528868126_2696896092137586688_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=174925&_nc_ohc=kUjXJTOpnBwAX-aymIb&_nc_ht=scontent.fsin13-1.fna&oh=00_AT80RHyc6Z9aJrAh8nXipP93by8NOtWDXFiVM6iktKjBfg&oe=62306048"},
   {name: "Charlie", fullName: "PTE 3", friendlyName: "Charlie - PTE 3", photo: "https://i.pinimg.com/280x280_RS/d2/ab/39/d2ab39788ec4254ab7761317448f5da3.jpg"},
