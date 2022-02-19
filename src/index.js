@@ -9,7 +9,7 @@ import * as Icons from "@material-ui/icons"
 import sir5logo from "./resources/5sirlogo.jpg"
 
 var shajs = require("sha.js")
-const VERSION_NUMBER = "fantasy-footgun-admin 0.1.10a"
+const VERSION_NUMBER = "fantasy-footgun-admin 0.1.11a"
 console.log(VERSION_NUMBER)
 var serverURL = "https://sheltered-atoll-88652.herokuapp.com/"
 const sha256hash = content => shajs('sha256').update(content).digest('base64')
@@ -146,6 +146,11 @@ const SettingsPanel = () => {
       <Material.Button variant="outlined" onClick={() => {
         socket.emit("writeState", adminAuthToken, state)
       }}>apply</Material.Button>
+      <Material.Button variant="outlined" onClick={() => {
+        if (prompt("Are you sure you want to delete all teams? This cannot be undone. Type 'Erase' to confirm that you intend to do so.") === "Erase") {
+          socket.emit("eraseSubmissions", adminAuthToken)
+        }
+      }}>delete all teams</Material.Button>
     </div>
   )
 }
