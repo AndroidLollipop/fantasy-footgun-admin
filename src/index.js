@@ -5,21 +5,12 @@ import socketIOClient from "socket.io-client";
 
 import * as Material from "@material-ui/core"
 import * as Icons from "@material-ui/icons"
-import SearchBar from "material-ui-search-bar"
 
 import sir5logo from "./resources/5sirlogo.jpg"
 
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday"
-import ListIcon from "@material-ui/icons/List"
-
 var shajs = require("sha.js")
-
-const SCHEMA = "0.1.5a"
-const VERSION_NUMBER = "fantasy-footgun-admin 0.1.6a"
+const VERSION_NUMBER = "fantasy-footgun-admin 0.1.7a"
 console.log(VERSION_NUMBER)
-
-const ranker = require("./searchRanker.js")
-
 var serverURL = "https://sheltered-atoll-88652.herokuapp.com/"
 const sha256hash = content => shajs('sha256').update(content).digest('base64')
 
@@ -27,16 +18,6 @@ var setTabs
 var additionalTabs = []
 const RESERVED_TABS = 1
 var tabID = RESERVED_TABS
-const addTab = (tab) => {
-  additionalTabs = [...additionalTabs]
-  additionalTabs.push(tab)
-  setTabs(additionalTabs)
-}
-const removeTab = (id) => {
-  additionalTabs = [...additionalTabs].filter(x => x.params[0] !== id)
-  detailPersistentStore[id] = undefined
-  setTabs(additionalTabs)
-}
 
 var socket
 var adminAuthToken
@@ -67,14 +48,6 @@ const App = () => {
   setTabs = mySetTabs
   React.useEffect(() => {
     socket = socketIOClient(serverURL, {secure: true});
-    socket.on("sendIndents", (indents) => {
-      dataStore = {...indents}
-      notifyNewData()
-    })
-    socket.on("sendNotifications", (notifications) => {
-      notificationsStore = [...notifications]
-      notifyNewN()
-    })
     socket.on("sendAdminSalt", (salt) => {
       adminSalt = salt
       if (waitSalt) {
@@ -133,24 +106,11 @@ const App = () => {
   );
 }
 
-const renderName = (blobs, name) => {
-  const blobName = blobs.find(x => x.name === name)?.fullName
-  return typeof blobName === "string" ? blobName : name
-}
-
 const NotificationsPanel = () => {
-  var myData = readNotifications()
-  const [data, setData] = React.useState(myData)
-  React.useEffect(() => {
-    const callbackID = registerNotify(setData)
-    return () => deregisterNotify(callbackID)
-  }, [])
-  const form = readForm()
   return (
     <div>
       <div style={{height: "12px"}}/>
       <Material.Paper square>
-        <ListFactory data={data} generator={item => <Material.TableRow><Material.TableCell align="center">{item.category}</Material.TableCell><Material.TableCell align="center">{renderName(form.blobs["Soldiers"], item.winner)}</Material.TableCell></Material.TableRow>} style={TransportViewStyle}/>
       </Material.Paper>
     </div>
   )
@@ -350,64 +310,6 @@ const TransportViewStyle = {
   font: "20px Arial, sans-serif"
 }
 
-const notificationItemStyle = (latest) => {
-  if (latest === false) {
-    return {
-      color: "grey"
-    }
-  }
-  else {
-    return {}
-  }
-}
-
-const addDetailTab = (data, index) => {
-  addTab({type: "detail", params: [tabID, index]})
-  tabID++
-}
-
-const addNewTab = (cloneID) => {
-  addTab({type: "newindent", params: [tabID, cloneID]})
-  tabID++
-}
-
-const ListFactory = ({data, generator, style, header, tail}) => {
-  return (
-    <Material.TableContainer>
-      <Material.Table stickyHeader>
-        {header}
-        <Material.TableBody>
-          {data.map(generator)}
-        </Material.TableBody>
-        {tail}
-      </Material.Table>
-    </Material.TableContainer>
-  )
-}
-
-const getCallbackSystem = (dataSource) => {
-
-  const registeredCallbacks = []
-
-  const registerCallback = (callback) => {
-    return registeredCallbacks.push(callback)-1
-  }
-
-  const deregisterCallback = (id) => {
-    if (id > -1 && id < registeredCallbacks.length) {
-      registeredCallbacks[id] = ()=>{}
-    }
-  }
-  
-  const notifyNewData = () => {
-    for (const callback of registeredCallbacks) {
-      callback(dataSource())
-    }
-  }
-
-  return [registerCallback, deregisterCallback, notifyNewData]
-}
-
 var dataStore = {columns: [], rows: []}
 
 var formStore = {fields: [{name: "sar21", initialData: "TBD", friendlyName: "Best SAR21" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}, {name: "saw", initialData: "TBD", friendlyName: "Best SAW" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}, {name: "gpmg", initialData: "TBD", friendlyName: "Best GPMG" ,fieldType: "selectBlob", blobName: "Soldiers", display: "textPhoto"}], data: {}, blobs: {"Soldiers": [
@@ -443,7 +345,7 @@ const Tabs = ({childWrapper, childContext, children, selTab, setSelTab, appbarRe
   const ChildWrapper = childWrapper
   return (
     <div>
-      <Material.AppBar title={<Material.Typography>Fantasy Skill at Arms</Material.Typography>} position="sticky" style={{top: "env(safe-area-inset-top)"}} ref={appbarRef}>
+      <Material.AppBar position="sticky" style={{top: "env(safe-area-inset-top)"}} ref={appbarRef}>
         <Material.Tabs variant="scrollable" value={Math.min(selTab, children.length-1)+pre.length}>
           {[...pre , ...children.map((child, index) => {
             const obj = {...child.props, removeCallback: () => child.props.removeCallback(index, children.length), onClick: () => {setSelTab(index)}, active: index === Math.min(selTab, children.length-1), key: child.props.mykey}
@@ -467,15 +369,6 @@ const Tab = ({label, onClick, active, removable, removeCallback}) => {
       </span>)}/>
   )
 }
-
-const TabCloseStyle = {
-  font: "16px Arial, sans-serif",
-  margin: "auto"
-}
-
-const [registerCallback, deregisterCallback, notifyNewData] = getCallbackSystem(readRange)
-
-const [registerNotify, deregisterNotify, notifyNewN] = getCallbackSystem(readNotifications)
 
 ReactDOM.render(
   <div style={{textAlign: "center"}}>
