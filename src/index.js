@@ -44,6 +44,7 @@ const ScrollWrapper = ({childContext, mykey, children}) => {
 
 const App = () => {
   
+  var [authenticated, setAuthenticated] = React.useState(false)
   var [tabs, mySetTabs] = React.useState([])
   setTabs = mySetTabs
   React.useEffect(() => {
@@ -68,6 +69,7 @@ const App = () => {
       adminAuthToken = sha256hash(`${adminSalt}::${secretToken}`)
       socket.emit("requestAdminAuth", adminAuthToken)
     }
+    socket.on("sendAuthSuccessful", () => setAuthenticated(true))
     socket.on("sendAuthFailed", onAuthFailed)
     socket.emit("requestAdminSalt", "")
     onAuthFailed()
@@ -92,7 +94,7 @@ const App = () => {
   const militaryPersistentStore = React.useRef({})
   const childScrollContext = React.useRef({})
 
-  return (
+  return authenticated ? (
     <div>
       <Tabs childWrapper={ScrollWrapper} childContext={childScrollContext} selTab={selTab} setSelTab={setSelTab} appbarRef={appbarRef}>
         {[(<div label="winners" key="defaultTab0" mykey="defaultTab0">
@@ -103,7 +105,7 @@ const App = () => {
         </div>), ...tabs.map(({type, params: v}, i) => (<div></div>))]}
       </Tabs>
     </div>
-  );
+  ) : (<div/>);
 }
 
 const optionMap = [undefined, true, false]
