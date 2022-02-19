@@ -9,7 +9,7 @@ import * as Icons from "@material-ui/icons"
 import sir5logo from "./resources/5sirlogo.jpg"
 
 var shajs = require("sha.js")
-const VERSION_NUMBER = "fantasy-footgun-admin 0.1.9a"
+const VERSION_NUMBER = "fantasy-footgun-admin 0.1.10a"
 console.log(VERSION_NUMBER)
 var serverURL = "https://sheltered-atoll-88652.herokuapp.com/"
 const sha256hash = content => shajs('sha256').update(content).digest('base64')
@@ -213,7 +213,7 @@ const FormFactory = ({blobs, prefill, fields, formPersistentStore, validator}) =
   const submit = async (authenticated) => {
     var constitutedObject = []
     for (const [text, setText, initialData, fieldName, friendlyName, fieldType] of fieldStates) {
-      if (fieldName !== -1) {
+      if (text !== -1) {
         constitutedObject.push({name: fieldName, category: friendlyName, winner: text})
       }
     }
