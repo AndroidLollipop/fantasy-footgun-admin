@@ -12,6 +12,7 @@ var shajs = require("sha.js")
 const VERSION_NUMBER = "fantasy-footgun-admin 0.1.12a"
 console.log(VERSION_NUMBER)
 const formStore = require("./formModel.js")
+formStore.fields = formStore.fields.slice(1)
 var serverURL = "https://sheltered-atoll-88652.herokuapp.com/"
 const sha256hash = content => shajs('sha256').update(content).digest('base64')
 
