@@ -28,6 +28,7 @@ var socket
 var adminAuthToken
 var adminSalt
 var waitSalt = false
+var exOnFail = false
 var secretToken
 const clientSalt = "mkAmN1iwuMpqfckRXDRwwmgSI+nfZTF3kKR0bs2MZnM="
 
@@ -62,6 +63,12 @@ const App = () => {
       }
     })
     const onAuthFailed = () => {
+      if (exOnFail) {
+        exOnFail = false
+        adminSalt = undefined
+        socket.emit("requestAdminSalt", "")
+        alert("Your session has expired.")
+      }
       const password = prompt("Please enter the administrator password")
       secretToken = sha256hash(`${clientSalt}::${password}`)
       if (adminSalt === undefined) {
@@ -74,7 +81,10 @@ const App = () => {
       adminAuthToken = sha256hash(`${adminSalt}::${secretToken}`)
       socket.emit("requestAdminAuth", adminAuthToken)
     }
-    socket.on("sendAuthSuccessful", () => setAuthenticated(true))
+    socket.on("sendAuthSuccessful", () => {
+      exOnFail = true
+      return setAuthenticated(true)
+    })
     socket.on("sendAuthFailed", onAuthFailed)
     socket.emit("requestAdminSalt", "")
     onAuthFailed()
