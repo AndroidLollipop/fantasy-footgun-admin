@@ -67,7 +67,7 @@ const App = () => {
         exOnFail = false
         adminSalt = undefined
         socket.emit("requestAdminSalt", "")
-        alert("Your session has expired.")
+        alert("Your session has expired")
       }
       const password = prompt("Please enter the administrator password")
       secretToken = sha256hash(`${clientSalt}::${password}`)
